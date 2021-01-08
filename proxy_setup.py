@@ -29,11 +29,11 @@ class ProxyEngine(object):
         options.add_argument("start-maximized")
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
-        driver = webdriver.Chrome(chrome_options=options, executable_path=self._path)
+        driver = webdriver.Chrome(options=options, executable_path=self._path)
         
         # get proxies and append to list
         driver.get("https://sslproxies.org/")
-        #driver.execute_script("return arguments[0].scrollIntoView(true);", WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//table[@class='table table-striped table-bordered dataTable']//th[contains(., 'IP Address')]"))))
+        #WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//option[@value='US']"))).click()
         ips = [my_elem.get_attribute("innerHTML") for my_elem in WebDriverWait(driver, 5).until(EC.visibility_of_all_elements_located((By.XPATH, "//table[@class='table table-striped table-bordered dataTable']//tbody//tr[@role='row']/td[position() = 1]")))]
         ports = [my_elem.get_attribute("innerHTML") for my_elem in WebDriverWait(driver, 5).until(EC.visibility_of_all_elements_located((By.XPATH, "//table[@class='table table-striped table-bordered dataTable']//tbody//tr[@role='row']/td[position() = 2]")))]
         driver.quit()
