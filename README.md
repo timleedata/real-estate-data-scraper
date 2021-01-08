@@ -1,5 +1,5 @@
 # Real Estate Data Scraper (with Python and Selenium)
-Source repo for [Zillow] home listings web scraper.
+Source repo for [Redfin] home listings web scraper.
 
 ## Requirements
 Python 3.8.5  
