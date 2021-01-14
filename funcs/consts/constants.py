@@ -11,6 +11,7 @@ filter_btn = "//div[@id='wideSidepaneFilterButtonContainer']/button" # xpath for
 house_btn = "//div[@id='propertyTypeFilter']//button[1]" # xpath for button to filter listings by houses
 condo_btn = "//div[@id='propertyTypeFilter']//button[2]" # xpath for button to filter listings by condos
 townhome_btn = "//div[@id='propertyTypeFilter']//button[3]" # xpath for button to filter listings by townhomes
+sold_btn = "//div[input[@name='showForSaleToggle']]" # xpath for button to filter listings by sold (in past 3 months)
 apply_filter_btn = "//div[@class='applyButtonContainer']/button" # xpath for button to apply filters
 listings_check = "//div[@id='right-container']" # xpath for div containing listings to check search success
 search_box = "search-box-input" # id for home page search box
@@ -25,6 +26,7 @@ city = "//span[@class='locality']" # xpath
 state = "//span[@class='region']" # xpath
 zip_code = "//span[@class='postal-code']" # xpath
 price = "//div[@class='statsValue']/div/span[2]" # xpath
+price_sold = "//div[@class='info-block price']/div[@class='statsValue']" # xpath
 bed_bath = "//div[@class='info-block']/div[@class='statsValue']" # xpath
 sqft = "//div[@class='info-block sqft']//span[@class='statsValue']" # xpath
 home_type = "//div[@class='table-row' and ./span='Style']/div" # xpath
@@ -36,7 +38,7 @@ sold_dates = "//div[@class='sold-row row PropertyHistoryEventRow']/div[@class='c
 
 # misc.
 csv_file_name = "rs_df_tmp.csv"
-final_file_name = "rs_df_final.csv"
+final_file_name = "rs_df_listed.csv"
 loc_file_name = "loc_list.csv"
 loc_file_area = "area"
 loc_file_city = "city"

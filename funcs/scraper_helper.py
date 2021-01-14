@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from typing import List, Set
 from funcs.proxy_setup import ProxyEngine
 from funcs.consts import constants
@@ -15,6 +16,7 @@ class RedfinScraper(object):
         self._href_set = set() # urls for listings
         self._href_list = []
         self._driver = None # webdriver
+        self._sold = False
         self._loc_list = []
         self._change_proxy = True
         self._added_count = 0
@@ -83,6 +85,19 @@ class RedfinScraper(object):
         except:
             return False
     
+    # sets filter for listings sold in past 3 months
+    def set_recently_sold(self) -> bool:
+        print("Method: set_recently_sold()")
+        try:
+            WebDriverWait(self._driver, 10).until(EC.element_to_be_clickable((By.XPATH, constants.filter_btn))).click() # filter button
+            time.sleep(2)
+            WebDriverWait(self._driver, 10).until(EC.element_to_be_clickable((By.XPATH, constants.sold_btn))).click() # sold button
+            time.sleep(2)
+            WebDriverWait(self._driver, 10).until(EC.element_to_be_clickable((By.XPATH, constants.apply_filter_btn))).click() # apply button
+            return True
+        except:
+            return False
+            
     '''
     # sets filters for listings as houses (single-faily), condo, townhomes
     def set_listing_filters(self) -> bool:
@@ -109,7 +124,10 @@ class RedfinScraper(object):
         try:
             WebDriverWait(self._driver, 10).until(EC.presence_of_element_located((By.XPATH, constants.listings_check))) # div for listings
             #return self.set_listing_filters()
-            return True
+            if self._sold:
+                return self.set_recently_sold()
+            else:
+                return True
         except:
             return False
     
@@ -212,10 +230,18 @@ class RedfinScraper(object):
         except:
             return []
     
+    # click expand if exists
+    def click_history_expand(self) -> bool:
+        try:
+            WebDriverWait(self._driver, 10).until(EC.element_to_be_clickable((By.XPATH, constants.expand_history_btn))).click()
+            return True
+        except:
+            return False
+        
     # tries to get sold history, returns blank if not found
     def blank_or_sold_history(self) -> str:
         try:
-            WebDriverWait(self._driver, 10).until(EC.element_to_be_clickable((By.XPATH, constants.expand_history_btn))).click()
+            self.click_history_expand()
             sold_history = ""
             sold_prices = [el.get_attribute("innerHTML") for el in WebDriverWait(self._driver, 10).until(EC.visibility_of_all_elements_located((By.XPATH, constants.sold_prices)))]
             sold_dates = [el.get_attribute("innerHTML") for el in WebDriverWait(self._driver, 10).until(EC.visibility_of_all_elements_located((By.XPATH, constants.sold_dates)))]
@@ -241,7 +267,7 @@ class RedfinScraper(object):
                 city = self.blank_or_element_xpath(constants.city)
                 state = self.blank_or_element_xpath(constants.state)
                 zip_code = self.blank_or_element_xpath(constants.zip_code)
-                price = self.blank_or_element_xpath(constants.price)
+                price = self.blank_or_element_xpath(constants.price_sold) if self._sold else self.blank_or_element_xpath(constants.price)
                 bed_bath = self.blank_or_all_elements_xpath(constants.bed_bath)
                 bed_bath_cond = len(bed_bath) >= 2
                 beds = bed_bath[0] if bed_bath_cond else ""
@@ -267,7 +293,7 @@ class RedfinScraper(object):
             return False
 
     # run
-    def run(self, path: str, loc: str):
+    def run(self, path: str, loc: str, sold: bool):
         # read in .csv file (if any)
         is_df_loaded = self.load_csv_file()
         
@@ -276,6 +302,8 @@ class RedfinScraper(object):
             self.load_loc_file()
         else:
             self._loc_list.append(loc)
+            
+        self._sold = sold
             
         # set up proxy
         proxy_engine = ProxyEngine(path)
