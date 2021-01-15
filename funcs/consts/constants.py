@@ -38,7 +38,7 @@ sold_dates = "//div[@class='sold-row row PropertyHistoryEventRow']/div[@class='c
 
 # misc.
 csv_file_name = "rs_df_tmp.csv"
-final_file_name = "rs_df_listed.csv"
+final_file_name = "rs_df_final.csv"
 loc_file_name = "loc_list.csv"
 loc_file_area = "area"
 loc_file_city = "city"
