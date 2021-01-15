@@ -5,7 +5,7 @@ Source repo for \[Redfin\] home listings web scraper.
 Web scraper for Redfin using Python and Selenium.  
 Includes proxy set up which uses a different ip/port each time the proxy is not loading the page or blocked by captcha.  
 Process will open the Redfin homepage, use search bar for the location specified, grab all the urls for the listing cards, and open each listing to acquire data.  
-**Note:** This is my first web scraping project and have intentionally left some data messy so to practice cleaning in a different project.
+**Note:** This is my first web scraping project and have intentionally left some data messy so to practice cleaning in a different project.  
 Scrapes the following details from the listing pages:  
 * Address info: street, city, state, zip_code  
 * Home info: price, beds, baths, sqft, home_type, sold_history  
