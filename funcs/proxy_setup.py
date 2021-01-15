@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from funcs.consts import constants
 from typing import List
 
 class ProxyEngine(object):
@@ -34,8 +35,8 @@ class ProxyEngine(object):
         # get proxies and append to list
         driver.get("https://sslproxies.org/")
         #WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//option[@value='US']"))).click()
-        ips = [my_elem.get_attribute("innerHTML") for my_elem in WebDriverWait(driver, 5).until(EC.visibility_of_all_elements_located((By.XPATH, "//table[@class='table table-striped table-bordered dataTable']//tbody//tr[@role='row']/td[position() = 1]")))]
-        ports = [my_elem.get_attribute("innerHTML") for my_elem in WebDriverWait(driver, 5).until(EC.visibility_of_all_elements_located((By.XPATH, "//table[@class='table table-striped table-bordered dataTable']//tbody//tr[@role='row']/td[position() = 2]")))]
+        ips = [my_elem.get_attribute("innerHTML") for my_elem in WebDriverWait(driver, 5).until(EC.visibility_of_all_elements_located((By.XPATH, constants.proxy_ips)))]
+        ports = [my_elem.get_attribute("innerHTML") for my_elem in WebDriverWait(driver, 5).until(EC.visibility_of_all_elements_located((By.XPATH, constants.proxy_ports)))]
         driver.quit()
         for i in range(0, len(ips)):
             self._proxy_list.append(ips[i]+':'+ports[i])
